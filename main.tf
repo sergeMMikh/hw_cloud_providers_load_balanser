@@ -1,10 +1,3 @@
-# data "aws_vpc" "develop" {
-#   default = true
-# }
-
-# data "aws_availability_zones" "av_zone" {
-# }
-
 module "network" {
   source = "./modules/network"
 }
@@ -17,13 +10,30 @@ module "instances" {
   Owner                   = var.Owner
   Project                 = var.Project
   Platform                = var.Platform
+  public_subnet_id        = module.network.public_subnet_id
+  private_subnet_id       = module.network.private_subnet_id
+  security_group_id       = module.network.security_group_id
+  vpc_id                  = module.network.vpc_id
+  s3_image_url            = module.storage.s3_image_url
+}
 
-  public_subnet_id  = module.network.public_subnet_id
-  private_subnet_id = module.network.private_subnet_id
-  security_group_id = module.network.security_group_id
+module "storage" {
+  source = "./modules/storage"
+
+  Owner = var.Owner
 }
 
 output "instances_info" {
   description = "Information about public instances"
   value       = module.instances.instances_info
+}
+
+output "alb_dns_name" {
+  description = "DNS name of the Load Balancer"
+  value       = module.instances.alb_dns_name
+}
+
+output "s3_image_url" {
+  description = "Public URL of the image stored in S3"
+  value       = module.storage.s3_image_url
 }

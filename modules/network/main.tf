@@ -29,6 +29,7 @@ resource "aws_subnet" "public" {
   }
 }
 
+
 resource "aws_subnet" "private" {
   vpc_id     = aws_vpc.main.id
   cidr_block = "10.10.2.0/24"
@@ -60,7 +61,7 @@ resource "aws_route_table_association" "public" {
 
 
 resource "aws_eip" "nat" {
-  vpc = true
+  domain = "vpc"
 }
 
 
