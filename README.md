@@ -60,5 +60,11 @@ user_data = templatefile("${path.module}/user_data.yaml.tpl", {
 <img src="images/Task_1_1.png" alt="Task_1_1" width="700" height="auto"></br>
 
 Скриншот обращения в браузере по DNS имени балансировщика нагрузки:</br>
-<img src="images/Task_3_1.png" alt="Task_3_1" width="700" height="auto"></br>
+<img src="images/Task_3_1.png" alt="Task_3_1" width="500" height="auto"></br>
+Список запущенных виртуальных машие, видно использование двух зон:</br>
+<img src="images/Task_3_2.png" alt="Task_3_2" width="700" height="auto"></br>
+Load Balanser:</br>
+<img src="images/Task_3_3.png" alt="Task_3_3" width="700" height="auto"></br>
+Target Group со списком инстансов и Health Check (все инстансы здоровы):</br>
+<img src="images/Task_3_3.png" alt="Task_3_3" width="700" height="auto"></br>
 

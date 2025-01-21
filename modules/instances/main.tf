@@ -22,19 +22,19 @@ resource "aws_launch_configuration" "web_server_lc" {
 
   security_groups = [var.security_group_id]
 
-  # user_data = templatefile("${path.module}/user_data.yaml.tpl", {
-  #   s3_image_url = var.s3_image_url
-  # })
+  user_data = templatefile("${path.module}/user_data.yaml.tpl", {
+    s3_image_url = var.s3_image_url
+  })
 
-  user_data = <<-EOF
-                #!/bin/bash
-                apt-get update -y
-                apt-get install -y apache2
-                systemctl start apache2
-                systemctl enable apache2
-                echo "<html><body><h1>Welcome to SMM HomeWork simple Server</h1><p>Here my S3 bucket stored image:</p><img src='${var.s3_image_url}' alt='S3 Image'/></body></html>" > /var/www/html/index.html
-                echo "S3 Image URL: ${var.s3_image_url}" > /var/www/html/debug.txt
-              EOF
+  # user_data = <<-EOF
+  #               #!/bin/bash
+  #               apt-get update -y
+  #               apt-get install -y apache2
+  #               systemctl start apache2
+  #               systemctl enable apache2
+  #               echo "<html><body><h1>Welcome to SMM HomeWork simple Server</h1><p>Here my S3 bucket stored image:</p><img src='${var.s3_image_url}' alt='S3 Image'/></body></html>" > /var/www/html/index.html
+  #               echo "S3 Image URL: ${var.s3_image_url}" > /var/www/html/debug.txt
+  #             EOF
 
   lifecycle {
     create_before_destroy = true
