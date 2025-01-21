@@ -28,18 +28,50 @@ resource "aws_subnet" "public" {
     Name = "PublicSubnet"
   }
 }
+resource "aws_subnet" "public_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.10.10.0/24"  # Изменённый диапазон
+  availability_zone = "eu-central-1a"
 
+  map_public_ip_on_launch = true
 
-resource "aws_subnet" "private" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.10.2.0/24"
+  tags = {
+    Name = "PublicSubnetA"
+  }
+}
 
+resource "aws_subnet" "public_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.10.11.0/24"  # Новый диапазон
+  availability_zone = "eu-central-1b"
+
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "PublicSubnetB"
+  }
+}
+
+resource "aws_subnet" "private_a" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.10.20.0/24"  # Изменённый диапазон
   availability_zone = "eu-central-1a"
 
   tags = {
-    Name = "PrivateSubnet"
+    Name = "PrivateSubnetA"
   }
 }
+
+resource "aws_subnet" "private_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.10.21.0/24"  # Новый диапазон
+  availability_zone = "eu-central-1b"
+
+  tags = {
+    Name = "PrivateSubnetB"
+  }
+}
+
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
@@ -54,8 +86,13 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
+resource "aws_route_table_association" "public_a" {
+  subnet_id      = aws_subnet.public_a.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_b" {
+  subnet_id      = aws_subnet.public_b.id
   route_table_id = aws_route_table.public.id
 }
 
@@ -67,7 +104,7 @@ resource "aws_eip" "nat" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public.id
+  subnet_id     = aws_subnet.public_a.id
 
   tags = {
     Name = "MyNATGateway"
@@ -87,8 +124,13 @@ resource "aws_route_table" "private" {
   }
 }
 
-resource "aws_route_table_association" "private" {
-  subnet_id      = aws_subnet.private.id
+resource "aws_route_table_association" "private_a" {
+  subnet_id      = aws_subnet.private_a.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_route_table_association" "private_b" {
+  subnet_id      = aws_subnet.private_b.id
   route_table_id = aws_route_table.private.id
 }
 

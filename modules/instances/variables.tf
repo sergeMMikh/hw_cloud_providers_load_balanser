@@ -29,14 +29,14 @@ variable "Platform" {
   default     = "Ubuntu"
 }
 
-variable "public_subnet_id" {
-  description = "ID of the public subnet"
-  type        = string
+variable "public_subnets_id" {
+  description = "ID list of the public subnet"
+  type        = list(string)
 }
 
 variable "private_subnet_id" {
-  description = "ID of the private subnet"
-  type        = string
+  description = "ID list of the private subnet"
+  type        = list(string)
 }
 
 variable "security_group_id" {

@@ -10,8 +10,8 @@ module "instances" {
   Owner                   = var.Owner
   Project                 = var.Project
   Platform                = var.Platform
-  public_subnet_id        = module.network.public_subnet_id
-  private_subnet_id       = module.network.private_subnet_id
+  public_subnets_id        = module.network.public_subnets_id
+  private_subnet_id       = module.network.private_subnets_id
   security_group_id       = module.network.security_group_id
   vpc_id                  = module.network.vpc_id
   s3_image_url            = module.storage.s3_image_url

@@ -41,7 +41,7 @@ resource "aws_autoscaling_group" "web_asg" {
   min_size             = 3
   max_size             = 3
   desired_capacity     = 3
-  vpc_zone_identifier  = [var.private_subnet_id]
+  vpc_zone_identifier  = var.private_subnet_id
 
   health_check_grace_period = 300
   health_check_type         = "EC2"
@@ -58,7 +58,7 @@ resource "aws_lb" "web_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.security_group_id]
-  subnets            = [var.public_subnet_id]
+  subnets            = var.public_subnets_id
 
   enable_deletion_protection = false
 
