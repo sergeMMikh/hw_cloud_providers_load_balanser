@@ -6,11 +6,6 @@ resource "aws_s3_bucket" "web_images" {
   }
 }
 
-# resource "aws_s3_bucket_acl" "web_images_acl" {
-#   bucket = aws_s3_bucket.web_images.id
-#   acl    = "public-read"
-# }
-
 resource "aws_s3_bucket_public_access_block" "web_images_block" {
   bucket = aws_s3_bucket.web_images.id
 
