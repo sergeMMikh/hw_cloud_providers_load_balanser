@@ -24,12 +24,30 @@ resource "aws_launch_configuration" "web_server_lc" {
 
   user_data = <<-EOF
                 #!/bin/bash
+                exec > /var/log/user-data.log 2>&1
+                set -x
+                
                 apt-get update -y
                 apt-get install -y apache2
+
                 systemctl start apache2
                 systemctl enable apache2
+                
                 echo "<html><body><h1>Welcome to My Web Server</h1><p>Here is an image:</p><img src='${var.s3_image_url}' alt='S3 Image'/></body></html>" > /var/www/html/index.html
+                echo "S3 Image URL: ${var.s3_image_url}" > /var/www/html/debug.txt
+                
+                sleep 30  # Даем серверу время для старта
               EOF
+
+  # user_data = <<-EOF
+  #               #!/bin/bash
+  #               apt-get update -y
+  #               apt-get install -y apache2
+  #               systemctl start apache2
+  #               systemctl enable apache2
+  #               echo "<html><body><h1>Welcome to My Web Server</h1><p>Here is an image:</p><img src='${var.s3_image_url}' alt='S3 Image'/></body></html>" > /var/www/html/index.html
+  #               echo "S3 Image URL: ${var.s3_image_url}" > /var/www/html/debug.txt
+  #             EOF
 
   lifecycle {
     create_before_destroy = true
@@ -74,12 +92,12 @@ resource "aws_lb_target_group" "web_target_group" {
   vpc_id      = var.vpc_id
   target_type = "instance"
 
-  health_check {
-    path                = "/"
-    interval            = 30
-    timeout             = 5
-    healthy_threshold   = 5
-    unhealthy_threshold = 2
+    health_check {
+    path                = "/index.html"  # Проверка по конкретному файлу
+    interval            = 60             # Увеличиваем интервал проверки
+    timeout             = 10              # Увеличиваем таймаут
+    healthy_threshold   = 2               # Быстрее становится Healthy
+    unhealthy_threshold = 5               # Медленнее становится Unhealthy
     matcher             = "200"
   }
 }
