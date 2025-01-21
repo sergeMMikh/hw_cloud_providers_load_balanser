@@ -59,6 +59,6 @@ user_data = templatefile("${path.module}/user_data.yaml.tpl", {
 Ссылку на публичный ip *Autoscaling Group* я так же вывел в [outputs](modules/storage/outputs.tf):</br>
 <img src="images/Task_1_1.png" alt="Task_1_1" width="700" height="auto"></br>
 
-
-
+Скриншот обращения в браузере по DNS имени балансировщика нагрузки:</br>
+<img src="images/Task_3_1.png" alt="Task_3_1" width="700" height="auto"></br>
 

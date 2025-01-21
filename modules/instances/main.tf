@@ -22,9 +22,19 @@ resource "aws_launch_configuration" "web_server_lc" {
 
   security_groups = [var.security_group_id]
 
-  user_data = templatefile("${path.module}/user_data.yaml.tpl", {
-    s3_image_url = var.s3_image_url
-  })
+  # user_data = templatefile("${path.module}/user_data.yaml.tpl", {
+  #   s3_image_url = var.s3_image_url
+  # })
+
+  user_data = <<-EOF
+                #!/bin/bash
+                apt-get update -y
+                apt-get install -y apache2
+                systemctl start apache2
+                systemctl enable apache2
+                echo "<html><body><h1>Welcome to SMM HomeWork simple Server</h1><p>Here my S3 bucket stored image:</p><img src='${var.s3_image_url}' alt='S3 Image'/></body></html>" > /var/www/html/index.html
+                echo "S3 Image URL: ${var.s3_image_url}" > /var/www/html/debug.txt
+              EOF
 
   lifecycle {
     create_before_destroy = true
@@ -69,12 +79,12 @@ resource "aws_lb_target_group" "web_target_group" {
   vpc_id      = var.vpc_id
   target_type = "instance"
 
-    health_check {
-    path                = "/index.html"  # Проверка по конкретному файлу
-    interval            = 60             # Увеличиваем интервал проверки
-    timeout             = 10              # Увеличиваем таймаут
-    healthy_threshold   = 2               # Быстрее становится Healthy
-    unhealthy_threshold = 5               # Медленнее становится Unhealthy
+  health_check {
+    path                = "/index.html" # Проверка по конкретному файлу
+    interval            = 60            # Увеличиваем интервал проверки
+    timeout             = 10            # Увеличиваем таймаут
+    healthy_threshold   = 2             # Быстрее становится Healthy
+    unhealthy_threshold = 5             # Медленнее становится Unhealthy
     matcher             = "200"
   }
 }
